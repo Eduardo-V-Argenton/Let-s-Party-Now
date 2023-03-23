@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'championships',
     'games',
     'invites',
-    'profiles',
     'support',
     'home',
     'accounts',
