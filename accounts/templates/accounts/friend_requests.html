@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Foto</th>
+        <th>Usuário</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if friend_requests %}
+        {% for friend_request in friend_requests %}
+            <tr>
+                <td>
+                    {% if friend_request.from_user.profile_picture %}
+                        <img src="{{ friend_request.from_user.profile_picture.url }}" style="max_width:20px; height: auto">
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'profile' friend_request.from_user.id%}"> {{ friend_request.from_user.username }}</a>
+                </td>
+                <td>
+                    <a href="{% url 'accept_friend_request' friend_request.id %}" class="btn btn-primary">Aceitar</a>  
+                </td>
+                <td>
+                    <a href="{% url 'reject_friend_request' friend_request.id %}" class="btn btn-primary">Recusar</a>  
+                </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+  </table>
+{% endblock content %}
+

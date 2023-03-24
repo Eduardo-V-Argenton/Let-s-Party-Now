@@ -29,7 +29,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    profile_picture = models.ImageField(blank=True, upload_to='media/users/profile_pics')
+    profile_picture = models.ImageField(blank=True, upload_to='users/profile_pics')
+    friends = models.ManyToManyField('User', blank=True, related_name='friends_set')
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['name', 'email']
@@ -38,3 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self) -> str:
         return self.username
+    
+class FriendRequest(models.Model):
+    from_user = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
