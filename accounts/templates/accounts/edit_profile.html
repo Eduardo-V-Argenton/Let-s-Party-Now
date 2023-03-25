@@ -17,6 +17,10 @@
         <input type="email" name="email" value="{{user.email}}" class="form-control"> 
     </div>
     <div class="form-group">
+        <label>Sobre</label>
+        <textarea name="about" class="form-control">{{user.about}}</textarea> 
+    </div>
+    <div class="form-group">
         <label>Senha</label>
         <input type="password" name="password" class="form-control"> 
     </div>
@@ -26,4 +30,5 @@
     </div>
         <button type="submit" class="btn btn-primary">Salvar</button>
 </form>
+<a href="{% url 'delete_account' %}" class="btn btn-danger">Excluir conta</a>
 {% endblock content %}

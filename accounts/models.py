@@ -1,6 +1,15 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.conf import settings
+from django.db.models.signals import pre_delete, pre_save
+from django.dispatch.dispatcher import receiver
+from django.core.files.storage import FileSystemStorage
+import os
+
+
+def get_profile_picture_path(instance, filename):
+    return f'users/{instance.id}/profile_picture.jpg'
 
 
 class CustomUserManager(BaseUserManager):
@@ -29,7 +38,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    profile_picture = models.ImageField(blank=True, upload_to='users/profile_pics')
+    profile_picture = models.ImageField(blank=True, upload_to=get_profile_picture_path, default='default/profile_picture.jpg')
     friends = models.ManyToManyField('User', blank=True, related_name='friends_set')
 
     USERNAME_FIELD = 'username'
@@ -40,6 +49,26 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self) -> str:
         return self.username
     
+
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
     to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
+
+
+@receiver(pre_delete, sender=User)
+def delete_profile_picture(sender, instance, **kwargs):
+    if instance.profile_picture and instance.picture != 'default/profile_picture.jpg':
+        picture_path = os.path.join(settings.MEDIA_ROOT, str(instance.profile_picture))
+        os.remove(picture_path)
+
+
+@receiver(pre_save, sender=User)
+def delete_old_profile_picture(sender, instance, **kwargs):
+    if instance.id:
+        old_picture = sender.objects.get(id=instance.id).profile_picture
+        if old_picture and old_picture != instance.profile_picture and old_picture != 'default/profile_picture.jpg':
+            try:
+                old_picture_path = os.path.join(settings.MEDIA_ROOT, str(old_picture))
+                os.remove(old_picture_path)
+            except:
+                pass

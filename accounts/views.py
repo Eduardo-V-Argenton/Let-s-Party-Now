@@ -155,6 +155,7 @@ def edit_profile(request):
         name = request.POST.get('name')
         profile_picture = request.FILES.get('profile_picture')
         email = request.POST.get('email')
+        about = request.POST.get('about')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
 
@@ -184,6 +185,8 @@ def edit_profile(request):
                 messages.error(request, 'Email Inválido')
                 return render(request, 'accounts/edit_profile.html')
         
+        user.about = about
+
         if len(password) > 0:
             if len(password) < 6:
                 messages.error(request, 'Senha muito curta')
@@ -193,7 +196,7 @@ def edit_profile(request):
                 return render(request, 'accounts/edit_profile.html')
             else:
                 user.set_password(password)
-        
+
         user.save()
 
         messages.success(request, 'Alterações Salvas')
@@ -202,3 +205,13 @@ def edit_profile(request):
         return redirect('edit_profile')
     
     return redirect('profile', request.user.username)
+
+@login_required(redirect_field_name='login')
+def delete_account(request):
+    return render(request, 'accounts/delete_account.html')
+
+@login_required(redirect_field_name='login')
+def confirm_delete(request):
+    user = get_object_or_404(User, username=request.user.username)
+    user.delete()
+    return redirect('login')
