@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+  <h1>Solicitações de amizade recebidas</h1>
   <table class="table">
     <thead>
       <tr>
@@ -21,10 +22,10 @@
                     <a href="{% url 'profile' friend_request.from_user.id%}"> {{ friend_request.from_user.username }}</a>
                 </td>
                 <td>
-                    <a href="{% url 'accept_friend_request' friend_request.id %}" class="btn btn-primary">Aceitar</a>  
+                    <a href="{% url 'accept_friend_request' friend_request.id%}" class="btn btn-primary">Aceitar</a>  
                 </td>
                 <td>
-                    <a href="{% url 'reject_friend_request' friend_request.id %}" class="btn btn-primary">Recusar</a>  
+                    <a href="{% url 'reject_friend_request' friend_request.id%}" class="btn btn-primary">Recusar</a>  
                 </td>
             </tr>
         {% endfor %}

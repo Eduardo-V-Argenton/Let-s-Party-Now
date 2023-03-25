@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import RequestDataTooBig
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
@@ -72,9 +73,9 @@ def register(request):
 
 
 @login_required(redirect_field_name='login')
-def profile(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    if  request.user.friends.filter(id=user_id).exists():
+def profile(request, username):
+    user = get_object_or_404(User, username=username)
+    if  request.user.friends.filter(username=username).exists():
         is_friend = True
     else:
         is_friend = False 
@@ -83,31 +84,25 @@ def profile(request, user_id):
 
 
 @login_required(redirect_field_name='login')
-def friends(request, user_id):
-    if user_id is not request.user.id:
-        return redirect('index')
-    user = get_object_or_404(User, id=user_id)
-    return render(request, 'accounts/friends.html', {'user':user})
+def friends(request):
+    return render(request, 'accounts/friends.html')
 
 
 @login_required(redirect_field_name='login')
-def friend_requests(request, user_id):
-    if user_id is not request.user.id:
-        return redirect('index')
-    friend_requests = FriendRequest.objects.order_by('-id').filter(to_user=user_id) 
+def friend_requests(request):
+    friend_requests = FriendRequest.objects.order_by('-id').filter(to_user=request.user) 
     return render(request, 'accounts/friend_requests.html', {'friend_requests':friend_requests})
 
 
 @login_required(redirect_field_name='login')
-def send_friend_request(request, user_id):
-    from_user = request.user
-    to_user = User.objects.get(id=user_id)
-    friend_request, created =  FriendRequest.objects.get_or_create(from_user=from_user, to_user=to_user)
+def send_friend_request(request, username):
+    to_user = get_object_or_404(User, username=username)
+    friend_request, created =  FriendRequest.objects.get_or_create(from_user=request.user, to_user=to_user)
     if created:
         messages.info(request,'Solicitação de amizade enviada')
     else:
         messages.error(request, 'Solicitação já enviada')
-    return redirect('profile', to_user.id)
+    return redirect('profile', username)
  
 
 @login_required(redirect_field_name='login')
@@ -120,27 +115,90 @@ def accept_friend_request(request, request_id):
         messages.info(request,'Solicitação de amizade aceita')
     else:
         messages.info(request,'Solicitação de amizade não aceita')
-    return redirect('friend_requests', request.user.id)
+    return redirect('friend_requests')
 
 
 @login_required(redirect_field_name='login')
 def reject_friend_request(request, request_id):
+    friend_request = FriendRequest.objects.get(id=request_id)
     if friend_request.to_user == request.user:
         friend_request = FriendRequest.objects.get(id=request_id)
         friend_request.delete()
         messages.info(request, 'Solicitação de amizade excluída')
     else:
         messages.error(request,'Solicitação de amizade não excluída')
-    return redirect('friend_requests', request.user.id)
+    return redirect('friend_requests')
 
 
 @login_required(redirect_field_name='login')
-def remove_friend(request, user_id):
-    if request.user.friends.filter(id=user_id).exists():
-        user = get_object_or_404(User, id=user_id)
+def remove_friend(request, username):
+    if request.user.friends.filter(username=username).exists():
+        user = get_object_or_404(User, username=username)
         user.friends.remove(request.user)
         request.user.friends.remove(user)
         messages.info(request,'Amigo Removido')
     else:
         messages.error(request,'Ocorreu um erro na remoção da amizade')
-    return redirect('friends', request.user.id)
+    return redirect('profile', username)
+
+
+@login_required(redirect_field_name='login')
+def edit_profile(request):
+    try:
+
+        if request.method != 'POST':
+            image_too_large = request.GET.get('image_too_large')
+            if(image_too_large == 'true'):
+                raise RequestDataTooBig
+            return render(request, 'accounts/edit_profile.html')
+
+        name = request.POST.get('name')
+        profile_picture = request.FILES.get('profile_picture')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+
+        
+        user = get_object_or_404(User, username=request.user.username)
+        
+        if len(name) == 0:
+            messages.error(request, 'Nome não pode ser vazio')
+            return render(request, 'accounts/edit_profile.html')
+        elif user.name != name:
+            user.name = name
+        
+        if profile_picture is not None:
+            user.profile_picture = profile_picture
+            
+        if email != user.email:
+            try:
+                if len(email) == 0:
+                    messages.error(request, 'Email não pode ser vazio')
+                    return render(request, 'accounts/edit_profile.html')
+                validate_email(email)
+                if User.objects.filter(email=email).exists():
+                    messages.error(request, 'Email já existe')
+                    return render(request, 'accounts/edit_profile.html')
+                user.email = email
+            except:
+                messages.error(request, 'Email Inválido')
+                return render(request, 'accounts/edit_profile.html')
+        
+        if len(password) > 0:
+            if len(password) < 6:
+                messages.error(request, 'Senha muito curta')
+                return render(request, 'accounts/edit_profile.html')
+            elif password != password2:
+                messages.error(request, 'Senhas Diferentes')
+                return render(request, 'accounts/edit_profile.html')
+            else:
+                user.set_password(password)
+        
+        user.save()
+
+        messages.success(request, 'Alterações Salvas')
+    except RequestDataTooBig:
+        messages.error(request, 'Imagem muito grande, o tamanho máximo permitido é de 1.5MB')
+        return redirect('edit_profile')
+    
+    return redirect('profile', request.user.username)

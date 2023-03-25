@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-1!ocf63_ghs@fx^57meq^n%uo=ymz)6@ibbi494k9amzuty=@n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['206.189.207.71', 'localhost']
+ALLOWED_HOSTS = ['www.letspartynow.live','letspartynow.live','206.189.207.71', 'localhost']
 
 
 # Application definition
@@ -145,3 +145,5 @@ MESSAGE_TAGS = {
     constants.SUCCESS:'alert-success',
     constants.INFO:'alert-info',
 }
+
+MAX_UPLOAD_SIZE = 1572864 # 1.5MB

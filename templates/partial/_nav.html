@@ -10,13 +10,13 @@
         {% if user.is_authenticated %}
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'profile' user.id%}">Perfil</a>
+                    <a class="nav-link" href="{% url 'profile' user.username%}">Perfil</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'friends' user.id%}">Amigos</a>
+                    <a class="nav-link" href="{% url 'friends'%}">Amigos</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">

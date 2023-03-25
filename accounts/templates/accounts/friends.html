@@ -19,13 +19,13 @@
               {% endif %}
             </td>
             <td>
-              <a href="{% url 'profile' friend.id%}"> {{ friend.username }}</a>
+              <a href="{% url 'profile' friend.username%}"> {{ friend.username }}</a>
             </td>
           </tr>
         {% endfor %}
     {% endif %}
     </tbody>
   </table>
-    <a href="{% url 'friend_requests' user.id %}" class="btn btn-primary">Solicitações de Amizade</a>
+    <a href="{% url 'friend_requests'%}" class="btn btn-primary">Solicitações de Amizade</a>
 {% endblock content %}
 
