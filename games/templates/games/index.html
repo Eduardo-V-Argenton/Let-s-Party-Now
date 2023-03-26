@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Game List</h1>
+<ul class="list-group">
+    {% for game in games %}
+    <li class="list-group-item">
+        <img src="{{ game.cover.url }}" alt="{{ game.name }}" class="img-thumbnail float-left mr-3" width="100">
+        <h5 class="mb-1">{{ game.name }}</h5>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
