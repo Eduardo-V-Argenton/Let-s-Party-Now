@@ -1,5 +1,6 @@
 import requests, os
 from django.contrib import messages
+from datetime import datetime
 
 TWITCH_CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID')
 TWITCH_CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET')
@@ -37,4 +38,11 @@ def get_igdb_data(request, data):
     elif response.status_code != 200:
         messages.error(request, 'Ocorreu um erro, tente novamente')
         return -1
-    return response.json()
+    games = response.json()
+    for game in games:
+        if 'cover' in game:
+            image_url = game['cover']['url']
+            game['cover']['url'] = image_url.replace("t_thumb", "t_1080p")
+        if 'first_release_date' in game:
+            game['first_release_date'] = datetime.fromtimestamp(game['first_release_date']).strftime('%d/%m/%Y') 
+    return games

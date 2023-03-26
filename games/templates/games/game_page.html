@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card mb-3">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img class="img-fluid rounded-start" src="{{ game.cover.url }}" alt="{{ game.name }}" heigh='auto' width='auto'>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h1 class="card-title">{{ game.name }}</h1>
+                <ul class="list-unstyled">
+                  <li><strong>Platformas:</strong> {% for platform in game.platforms %}{{ platform.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</li>
+                  <li><strong>Gêneros:</strong> {% for genre in game.genres %}{{ genre.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</li>
+                  <li><strong>Data de Lançamento:</strong> {{ game.first_release_date}}</li>
+                </ul>
+                <p class="card-text">{{ game.summary }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

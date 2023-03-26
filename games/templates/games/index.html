@@ -1,13 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Game List</h1>
-<ul class="list-group">
-    {% for game in games %}
-    <li class="list-group-item">
-        <img src="{{ game.cover.url }}" alt="{{ game.name }}" class="img-thumbnail float-left mr-3" width="100">
-        <h5 class="mb-1">{{ game.name }}</h5>
-    </li>
-    {% endfor %}
-</ul>
-{% endblock %}
+    <h1>Games</h1>
+
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
+        {% for game in games %}
+            <div class="col">
+                <div class="card h-100">
+                    <a href="{% url 'game_page' game.id%}"><img src="{{ game.cover.url }}" class="card-img-top" alt="{{ game.name }} cover"></a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ game.name }}</h5>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>Nenhum jogo encontrado</p>
+        {% endfor %}
+    </div>
+    {% if games and games|length >= games_per_page %}
+    <div class="pagination">
+      {% if page_number > 1 %}
+        <a href="?page={{ page_number|add:"-1" }}" class="btn btn-primary">Anterior</a>
+      {% endif %}
+      {% if games|length >= games_per_page %}
+        <a href="?page={{ page_number|add:"1" }}" class="btn btn-primary">Próximo</a>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endblock content %}
