@@ -10,9 +10,20 @@
         {% if user.is_authenticated %}
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'profile' user.username%}">Perfil</a>
+                    <a class="nav-link" href="{% url 'games_list'%}">Games</a>
                 </li>
             </ul>
+            <form method="get" action="{% url 'games_list' %}">
+                <div class="form-group row">
+                  <div class="col-13">
+                    <input class="form-control"
+                          type="search" value="{{ request.GET.search }}"
+                          id="search-input"
+                          placeholder="Digite sua pesquisa"
+                          name="search">
+                  </div>
+                </div>
+              </form>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'friends'%}">Amigos</a>
@@ -20,7 +31,7 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'games_list'%}">Games</a>
+                    <a class="nav-link" href="{% url 'profile' user.username%}">Perfil</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
@@ -29,10 +40,6 @@
                 </li>
             </ul>
         {% endif %}
-            <form class="form-inline my-2 my-lg-0 ml-lg-4" action="{% url 'index' %}">
-                <input name="term" value="{{ request.GET.term }}" class="form-control mr-sm-2" type="search" placeholder="Pesquisar"
-                       aria-label="Search">
-            </form>
         </div>
     </div>
 </nav>

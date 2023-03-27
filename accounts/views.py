@@ -3,6 +3,7 @@ from django.core.exceptions import RequestDataTooBig
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
+from django.db.models import Q
 from .models import User, FriendRequest
 
 
@@ -70,6 +71,29 @@ def register(request):
     user.save()
     messages.success(request, 'Usuário Cadastrado')
     return redirect('login')
+
+
+@login_required(redirect_field_name='login')
+def index(request):
+    page_number = request.GET.get('page', 1)
+    search_users_per_page = 1
+    offset = (int(page_number) - 1) * search_users_per_page
+    search = request.GET.get('search')
+    if search:
+        users = User.objects.filter(Q(name__icontains=search) | Q(username__icontains=search))
+        search_users_total = users.count()
+        if offset + search_users_per_page < search_users_total:
+            has_next = True
+        else:
+            has_next = False 
+        users = users[offset:offset + search_users_per_page] 
+    else:
+        users = User.objects.all
+    return render(request, 'accounts/index.html', {
+        'search_users': users,
+        'has_next': has_next,
+        'page_number': int(page_number),
+    })    
 
 
 @login_required(redirect_field_name='login')

@@ -3,26 +3,27 @@
 {% block content %}
     {% if request.GET.search %}
       <div class="d-flex">
-        <a href='?search={{ request.GET.search }}&page=1' class='link-dark'><h1>Games</h1></a>
+        <a href='{% url "games_list" %}?search={{request.GET.search}}' class='link-secondary'><h1>Games</h1></a>
         <h1>  |  </h1>
-        <a href='{% url "users_list" %}?search={{request.GET.search}}' class='link-secondary'><h1>Usuários</h1></a>
+        <a href='?search={{ request.GET.search }}&page=1' class='link-dark'><h1>Usuários</h1></a>
       </div>  
       {% else %}
         <h1>Games</h1>
     {% endif %}
 
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
-        {% for game in games %}
+        {% for search_user in search_users %}
             <div class="col">
                 <div class="card h-100">
-                    <a href="{% url 'game_page' game.id%}"><img src="{{ game.cover.url }}" class="card-img-top" alt="{{ game.name }} cover"></a>
+                    <a href="{% url 'profile' search_user.username%}"><img src="{{ search_user.profile_picture.url }}" class="card-img-top" alt="{{ search_user.name }} cover"></a>
                     <div class="card-body">
-                        <h5 class="card-title">{{ game.name }}</h5>
+                        <h5 class="card-title">{{ search_user.username }}</h5>
+                        <h7 class="card-title">{{ search_user.name }}</h7>
                     </div>
                 </div>
             </div>
         {% empty %}
-            <p>Nenhum jogo encontrado</p>
+            <p>Nenhum Usuário encontrado</p>
         {% endfor %}
     </div>
     <div class="pagination">
@@ -33,7 +34,7 @@
             <a href="?page={{ page_number|add:"-1" }}" class="btn btn-primary">Anterior</a>
         {% endif %}
       {% endif %}
-      {% if games|length >= games_per_page %}
+      {% if has_next%}
         {% if request.GET.search %}
           <a href="?search={{ request.GET.search }}&page={{ page_number|add:"1" }}" class="btn btn-primary">Próximo</a>
           {% else %}
