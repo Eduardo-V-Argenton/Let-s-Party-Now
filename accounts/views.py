@@ -76,7 +76,7 @@ def register(request):
 @login_required(redirect_field_name='login')
 def index(request):
     page_number = request.GET.get('page', 1)
-    search_users_per_page = 1
+    search_users_per_page = 20
     offset = (int(page_number) - 1) * search_users_per_page
     search = request.GET.get('search')
     if search:
