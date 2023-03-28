@@ -16,4 +16,6 @@ urlpatterns = [
     path('remove_friend/<str:username>', views.remove_friend, name='remove_friend'),
     path('delete_account/', views.delete_account, name='delete_account'),
     path('confirm_delete/', views.confirm_delete, name='confirm_delete'),
+    path('notifications/', views.notifications, name='notifications'),
+    path('delete_notification/<int:notification_id>', views.delete_notification, name='delete_notification'),
 ]

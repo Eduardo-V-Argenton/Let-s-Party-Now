@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Notificações</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Remetente</th>
+        <th>Notificação</th>
+        <th>Data</th>
+        <th>Excluir</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if notifications %}
+        {% for notification in notifications%}
+            <tr>
+                <td>
+                    <a href="{% url 'profile' notification.sender %}" class="link-dark">{{notification.sender.username}}</a>  
+                </td>
+                <td>
+                    <a href="{% url notification.url %}" class="link-dark">{{ notification.message}}</a>  
+                </td>
+                <td>
+                    <p>{{notification.send_date}}</p>  
+                </td>
+                <td>
+                  <a href="{% url 'delete_notification' notification.id%}">&#128465;</a>
+                </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+  </table>
+{% endblock content %}
+

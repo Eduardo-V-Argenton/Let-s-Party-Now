@@ -55,6 +55,30 @@ class FriendRequest(models.Model):
     to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)
 
 
+class Notification(models.Model):
+    sender = models.ForeignKey(User, related_name='sender', on_delete=models.CASCADE)
+    recipient = models.ForeignKey(User, related_name='recipient', on_delete=models.CASCADE)
+    send_date = models.DateTimeField(default=timezone.now)
+    message = models.CharField(max_length=512, default='Text', blank=False)
+    url = None
+    object_linked = None
+
+    class Meta:
+        abstract = True
+    
+    def search_id(search):
+        frn = FriendRequestNotification.objects.order_by('-id').filter(id=search)
+        return frn
+
+    def search_recipient(search):
+        frn = FriendRequestNotification.objects.order_by('-id').filter(recipient=search)
+        return frn
+
+class FriendRequestNotification(Notification):
+    url = 'friend_requests'
+    object_linked = models.ForeignKey(FriendRequest, related_name='object_linked', on_delete=models.CASCADE)
+
+
 @receiver(pre_delete, sender=User)
 def delete_profile_picture(sender, instance, **kwargs):
     if instance.profile_picture and instance.picture != 'default/profile_picture.jpg':
