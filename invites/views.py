@@ -42,9 +42,9 @@ def create_invite(request, game_id):
                 ivn.save()
             else:
                 messages.error(request, 'Erro ao enviar os convites')
-                return redirect('index')
+                return redirect('create_invite', game_id)
         messages.info(request, 'Convites Enviado com sucessos')
-        return redirect('index')
+        return redirect('game_page', game_id)
     else:
         friends = request.user.friends.all()
         date_time = timezone.localtime().strftime('%Y-%m-%dT%H:%M')
