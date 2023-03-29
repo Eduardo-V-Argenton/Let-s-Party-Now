@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1>Avalie-nos</h1>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="score" class="form-label">Nota (0-10)</label>
+      <input type="number" class="form-control" id="score" name="score" min="0" max="10" required>
+    </div>
+    <div class="mb-3">
+      <label for="comment" class="form-label">Comentário</label>
+      <textarea class="form-control" id="comment" name="comment" rows="5" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+</div>
+{% endblock %}

@@ -10,6 +10,7 @@
           <tr>
             <th>Usuário</th>
             <th>Email</th>
+            <th>Data</th>
             <th>Problema</th>
             <th>Excluir</th>
           </tr>
@@ -19,6 +20,7 @@
             <tr>
               <td>{{ ticket.username }}</td>
               <td>{{ ticket.email }}</td>
+              <td>{{ ticket.date }}</td>
               <td>{{ ticket.problem }}</td>
               <td>
                 <a href="{% url 'delete_ticket' ticket.id%}">&#128465;</a>

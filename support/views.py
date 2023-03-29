@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import SupportTicket
+from .models import SupportTicket, Review
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -36,5 +36,32 @@ def delete_ticket(request, ticket_id):
         sts = SupportTicket.objects.get(id=ticket_id)
         sts.delete()
         return redirect('support_list')
+    else:
+        return redirect('index')
+
+
+def review(request):
+    if request.method == 'POST':
+        score = int(request.POST.get('score'))
+        comment = request.POST.get('comment')
+
+        if score and comment and score >= 0 and score <= 10:
+            review = Review(score=score, comment=comment)
+            review.save()
+        else:
+            messages.error(request,'A nota deve ser entre 0 e 10')
+            return render(request, 'support/review.html')
+
+        messages.success(request, 'Obrigado pela avaliação')
+        return redirect('index')
+    else:
+        return render(request, 'support/review.html')
+
+
+@login_required(redirect_field_name='login')
+def review_list(request):
+    if request.user.is_staff:
+        reviews = Review.objects.all()
+        return render(request, 'support/review_list.html', {'reviews':reviews})
     else:
         return redirect('index')

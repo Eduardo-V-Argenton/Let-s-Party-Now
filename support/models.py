@@ -7,6 +7,9 @@ class SupportTicket(models.Model):
     email = models.EmailField(blank=False, null=False)
     problem = models.TextField(blank=False, null=False)
     date = models.DateTimeField(default=timezone.now)
-    is_answered = models.BooleanField(default=False)
 
-    
+
+class Review(models.Model):
+    score = models.IntegerField(default=0)
+    comment = models.TextField(blank=False, null=False) 
+    date = models.DateTimeField(default=timezone.now)
