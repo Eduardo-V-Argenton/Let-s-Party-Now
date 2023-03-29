@@ -7,7 +7,7 @@ from django.dispatch.dispatcher import receiver
 import os
 
 
-def get_profile_picture_path(instance):
+def get_profile_picture_path(instance, filename):
     return f'users/{instance.id}/profile_picture.jpg'
 
 
