@@ -12,7 +12,6 @@ def notifications(request):
 
 @login_required(redirect_field_name='login')
 def delete_notification(request, notification_id):
-    notification = Notification.search_id(notification_id)
-    notification.delete()
+    Notification.delete(notification_id)
     messages.info(request,'Notificação Excluída')
     return redirect('notifications')

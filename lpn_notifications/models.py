@@ -14,17 +14,17 @@ class Notification(models.Model):
     class Meta:
         abstract = True
     
-    def search_id(search):
-        frn = FriendRequestNotification.objects.order_by('-id').filter(id=search)
-        ivn = InviteNotification.objects.order_by('-id').filter(id=search)
-        empty_qs = FriendRequestNotification.objects.none()
-        return empty_qs.union(frn, ivn)
-
     def search_recipient(search):
         frn = FriendRequestNotification.objects.order_by('-id').filter(recipient=search)
         ivn = InviteNotification.objects.order_by('-id').filter(recipient=search)
         empty_qs = FriendRequestNotification.objects.none()
         return empty_qs.union(frn, ivn)
+
+    def delete(id):
+        frn = FriendRequestNotification.objects.order_by('-id').filter(id=id)
+        frn.delete()
+        ivn = InviteNotification.objects.order_by('-id').filter(id=id)
+        ivn.delete()
 
 
 class FriendRequestNotification(models.Model):
