@@ -23,4 +23,6 @@ urlpatterns = [
     path('', include('home.urls')),
     path('accounts/', include('accounts.urls')),
     path('games/', include('games.urls')),
+    path('invites/', include('invites.urls')),
+    path('notifications/', include('lpn_notifications.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
+      {% for invite in invites %}
+          <div class="col">
+              <div class="card h-100">
+                <tr>
+                    <a href="{% url 'game_page' invite.game.id %}"><img src="{{ invite.game.cover.url }}" class="card-img-top" alt="{{ invite.game.name }} cover"></a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ invite.game.name }}</h5>
+                        <a href="{% url 'profile' invite.from_user%}"><h6 class="card-title link-dark">{{ invite.from_user}}</h6></a>
+                        <h6 class="card-title">{{ invite.date }}</h6>
+                        {{ invite.message }}  
+                    </div>
+                    {% if not invite.answered %}
+                        <a href="{% url 'accept_invite' invite.id %}" class="btn btn-primary">Aceitar</a>  
+                        <a href="{% url 'reject_invite' invite.id %}" class="btn btn-primary">Recusar</a>
+                        {% else %}
+                            {% if invite.was_accepted %}
+                                <p> Aceito 
+                                {% else %}
+                                <p> Recusado 
+                            {% endif %}
+                            em {{ invite.answered_date }}</p>
+                        <a href="{% url 'delete_invite' invite.id%}">&#128465;</a>
+                    {% endif %}
+                </tr>  
+                </div>
+          </div>
+      {% empty %}
+          <p>Nenhum Convite encontrado</p>
+      {% endfor %}
+  </div>
+{% endblock content %}

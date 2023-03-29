@@ -18,6 +18,7 @@
                   <li><strong>Data de Lançamento:</strong> {{ game.first_release_date}}</li>
                 </ul>
                 <p class="card-text">{{ game.summary }}</p>
+                <a href="{% url 'create_invite' game.id%}" class="btn btn-primary">Convidar amigo para jogar</a>
               </div>
             </div>
           </div>

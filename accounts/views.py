@@ -4,7 +4,8 @@ from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.db.models import Q
-from .models import User, FriendRequest, FriendRequestNotification, Notification
+from .models import User, FriendRequest
+from lpn_notifications.models import FriendRequestNotification
 
 
 def login(request):
@@ -124,26 +125,13 @@ def send_friend_request(request, username):
     friend_request, created =  FriendRequest.objects.get_or_create(from_user=request.user, to_user=to_user)
     if created:
         frn = FriendRequestNotification.objects.create(sender=request.user, 
-                            recipient=to_user, object_linked=friend_request,  message='Você recebeu'\
-                                 ' uma solicitação de Amizade')
+                            recipient=to_user, object_linked=friend_request)
         frn.save()
         messages.info(request,'Solicitação de amizade enviada')
     else:
         messages.error(request, 'Solicitação já enviada')
     return redirect('profile', username)
  
- 
-@login_required(redirect_field_name='login')
-def notifications(request):
-    notifications = Notification.search_recipient(request.user)
-    return render(request, 'accounts/notifications.html', {'notifications':notifications})
-
-@login_required(redirect_field_name='login')
-def delete_notification(request, notification_id):
-    notification = Notification.search_id(notification_id)
-    notification.delete()
-    messages.info(request,'Notificação Excluída')
-    return redirect('notifications')
 
 @login_required(redirect_field_name='login')
 def accept_friend_request(request, request_id):
@@ -162,7 +150,6 @@ def accept_friend_request(request, request_id):
 def reject_friend_request(request, request_id):
     friend_request = FriendRequest.objects.get(id=request_id)
     if friend_request.to_user == request.user:
-        friend_request = FriendRequest.objects.get(id=request_id)
         friend_request.delete()
         messages.info(request, 'Solicitação de amizade excluída')
     else:

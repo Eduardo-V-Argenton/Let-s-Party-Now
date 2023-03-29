@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, FriendRequest, FriendRequestNotification
+from .models import User, FriendRequest
 
 class CustomUserAdmin(UserAdmin):
     # Define the fields to display in the list view
@@ -17,6 +17,5 @@ class CustomUserAdmin(UserAdmin):
     # Define the fields to filter by in the list view
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'date_joined')
 
-admin.site.register(FriendRequestNotification)
 admin.site.register(FriendRequest)
 admin.site.register(User, CustomUserAdmin)
