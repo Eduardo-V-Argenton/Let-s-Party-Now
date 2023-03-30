@@ -56,7 +56,7 @@ class FriendRequest(models.Model):
 
 @receiver(pre_delete, sender=User)
 def delete_profile_picture(sender, instance, **kwargs):
-    if instance.profile_picture and instance.picture != 'default/profile_picture.jpg':
+    if instance.profile_picture and instance.profile_picture != 'default/profile_picture.jpg':
         picture_path = os.path.join(settings.MEDIA_ROOT, str(instance.profile_picture))
         os.remove(picture_path)
 

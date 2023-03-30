@@ -13,6 +13,11 @@
                     <a class="nav-link" href="{% url 'games_list'%}">Games</a>
                 </li>
             </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'public_championships' %}">Campeonatos</a>
+                </li>
+            </ul>
             <form method="get" action="{% url 'games_list' %}">
                 <div class="form-group row">
                   <div class="col-13">

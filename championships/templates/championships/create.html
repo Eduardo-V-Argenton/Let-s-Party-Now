@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="championship_name">Nome do Campeonato:</label>
+            <input type="text" class="form-control" id="championship_name" name="championship_name" required>
+        </div>
+        <div class="form-group">
+            <label for="start_date">Data:</label>
+            <input type="datetime-local" class="form-control" id="start_date" name="start_date" required>
+        </div>
+        <div class="form-group">
+            <label for="is_public">Privado:</label>
+            <input type="checkbox" class="form-check-input" id="is_public" name="is_public">
+        </div>
+        <div class="form-group">
+            <label for="password" id="password_label">Senha:</label>
+            <input type="password" class="form-control" id="password" name="password">
+        </div>
+        <div class="form-group">
+            <label for="info">Info:</label>
+            <textarea class="form-control" id="info" name="info" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="vacancies">Vagas:</label>
+            <input type="number" class="form-control" id="vacancies" name="vacancies">
+        </div>
+        <div class="form-group">
+            <label for="use_default_entrance">Usar método padrão de aprovação de entrada:</label>
+            <input type="checkbox" class="form-check-input" id="use_default_entrance" name="use_default_entrance">
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+    <script>
+        const passwordField = document.getElementById("password");
+        const passwordLabel = document.getElementById("password_label");
+        const isPublicCheckbox = document.getElementById("is_public");
+    
+        function togglePasswordField() {
+            passwordField.style.display = isPublicCheckbox.checked ? "block" : "none";
+            passwordLabel.style.display = isPublicCheckbox.checked ? "block" : "none";
+        }
+    
+        togglePasswordField();
+        isPublicCheckbox.addEventListener("change", togglePasswordField);
+    </script>
+{% endblock content %}
+

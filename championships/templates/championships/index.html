@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="mb-4">Campeonatos</h1>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Game</th>
+          <th>Organizador</th>
+          <th>Data</th>
+          <th>Vagas</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for championship in championships %}
+          <tr>
+            <td>{{ championship.championship_name }}</td>
+            <td>
+              <a href="{% url 'game_page' championship.game.id %}">
+                {{ championship.game.name }}
+              </a>
+            </td>
+            <td>
+              <a href="{% url 'profile' championship.organizer.username %}">
+                {{ championship.organizer }}
+              </a>
+            </td>
+            <td>{{ championship.start_date }}</td>
+            <td>{{ championship.vacancies }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="pagination">
+    {% if page_number > 1 %}
+          <a href="?page={{ page_number|add:"-1" }}" class="btn btn-primary">Anterior</a>
+    {% endif %}
+    {% if has_next%}
+          <a href="?page={{ page_number|add:"1" }}" class="btn btn-primary">Próximo</a>
+    {% endif %}
+  </div>
+{% endblock %}

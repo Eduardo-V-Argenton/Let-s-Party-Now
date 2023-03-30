@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from accounts.models import User
-from typing import Any
-from datetime import datetime
 
 
 class Invite(models.Model):
@@ -14,11 +12,3 @@ class Invite(models.Model):
     answered = models.BooleanField(default=False)
     answered_date = models.DateTimeField(default=timezone.now)
     was_accepted = models.BooleanField(default=False)
-
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-
-
-
-
-

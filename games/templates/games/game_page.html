@@ -19,6 +19,8 @@
                 </ul>
                 <p class="card-text">{{ game.summary }}</p>
                 <a href="{% url 'create_invite' game.id%}" class="btn btn-primary">Convidar amigo para jogar</a>
+                <a href="{% url 'create_championship' game.id%}" class="btn btn-primary">Criar Campeonato</a>
+                <a href="{% url 'public_championships_by_game' game.id%}" class="btn btn-primary">Ver Campeonatos</a>
               </div>
             </div>
           </div>

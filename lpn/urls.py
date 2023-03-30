@@ -25,6 +25,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('games/', include('games.urls')),
     path('invites/', include('invites.urls')),
+    path('championships/', include('championships.urls')),
     path('notifications/', include('lpn_notifications.urls')),
     path('support/', include('support.urls')),
 ] 
