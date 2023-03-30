@@ -33,12 +33,9 @@ def create_invite(request, game_id):
             invite, created = Invite.objects.get_or_create(from_user=request.user, to_user=friend, \
                                            date=date, message=message, game=game_id)
             if created:
-                ivn, created = InviteNotification.objects.get_or_create(sender=request.user, \
-                        recipient=friend, object_linked=invite, \
-                            message=f'Você recebeu um convite de {request.user}'\
-                                f' para jogar {game_name}')
-                if not created:
-                    messages.error(request, 'Erro Aqui mermão')
+                ivn = InviteNotification.objects.create(sender=request.user, \
+                        recipient=friend, message=f'Você recebeu um convite de'  
+                            f'{request.user} para jogar {game_name}')
                 ivn.save()
             else:
                 messages.error(request, 'Erro ao enviar os convites')
@@ -66,7 +63,7 @@ def accept_invite(request, invite_id):
         game_name = get_igdb_data(request, data)[0]['name']
         
         ivn = InviteNotification.objects.create(sender=request.user, \
-                recipient=invite.from_user, object_linked=invite, \
+                recipient=invite.from_user, \
                     message=f'{request.user.username} aceitou seu pedido para jogar {game_name}')
         ivn.save()
         messages.success(request, 'Convite aceito')
@@ -89,7 +86,7 @@ def reject_invite(request, invite_id):
         game_name = get_igdb_data(request, data)[0]['name']
         
         ivn = InviteNotification.objects.create(sender=request.user, \
-                recipient=invite.from_user, object_linked=invite, \
+                recipient=invite.from_user, \
                     message=f'{request.user.username} recusou seu pedido para jogar {game_name}')
         ivn.save()
         messages.success(request, 'Convite Recusado')

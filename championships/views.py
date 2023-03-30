@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from . models import Championship,User
 from django.contrib import messages
 from games.utils.igdb import get_igdb_data
+from lpn_notifications.models import ChampionshipNotification
 from django.contrib.auth.decorators import login_required
 
 
@@ -68,7 +69,7 @@ def list_public_by_game(request, game_id):
     championships = championships[offset:offset+championships_per_page]
 
     for championship in championships:
-        data=f'fields name; where id = {game_id};'
+        data=f'fields name,cover.url; where id = {game_id};'
         game = get_igdb_data(request, data)
         championship.game = game[0]
 
@@ -119,6 +120,10 @@ def edit(request, championship_id):
                 messages.error(request, 'O número de jogadores não pode ser maior do que o de vagas')
             championship.save()
             messages.success(request, 'Campeonato Editado')
+            for player in championship.players.all():
+                chn = ChampionshipNotification(sender=request.user, recipient=player,
+                                               message=f"O campeonato {championship.championship_name} teve modificações")
+                chn.save()
             return redirect('championship_page',championship_id)
         else:
             return render(request, 'championships/edit.html',{
@@ -134,6 +139,9 @@ def enter_championship(request, championship_id):
             and championship.use_default_entrance and request.user not in championship.players.all():
         championship.players.add(request.user)
         championship.save()
+        chn = ChampionshipNotification(sender=request.user, recipient=championship.organizer,
+                                message=f"{request.user.username} entrou em {championship.championship_name}")
+        chn.save()
         return redirect('championship_page',championship_id)
     else:
         return redirect('public_championships')
@@ -144,6 +152,9 @@ def exit_championship(request, championship_id):
     if championship.use_default_entrance and request.user in championship.players.all():
         championship.players.remove(request.user)
         championship.save()
+        chn = ChampionshipNotification(sender=request.user, recipient=championship.organizer,
+                                message=f"{request.user.username} saiu de {championship.championship_name}")
+        chn.save()
         return redirect('championship_page',championship_id)
     else:
         return redirect('public_championships')
@@ -157,6 +168,9 @@ def remove_player(request, championship_id, player_id):
             and championship.organizer == request.user:
         championship.players.remove(player)
         championship.save()
+        chn = ChampionshipNotification(sender=request.user, recipient=player, 
+                                message=f"Você foi removido de {championship.championship_name}")
+        chn.save()
         return redirect('championship_page',championship_id)
     else:
         return redirect('public_championships')
@@ -226,9 +240,17 @@ def delete(request, championship_id):
                     >= 0.75 * championship.vacancies:
                 messages.error(request, 'O campeonato não pode ser excluído, entre em contato com o suporte')
             else:
+                for player in championship.players.all():
+                    chn = ChampionshipNotification(sender=request.user, recipient=player,
+                                                message=f"O campeonato {championship.championship_name} foi excluído")
+                    chn.save()
                 championship.delete()
                 messages.success(request, 'Campeonato Excluído')
         else:
+            for player in championship.players.all():
+                chn = ChampionshipNotification(sender=request.user, recipient=player,
+                                               message=f"O campeonato {championship.championship_name} foi excluido")
+                chn.save()
             championship.delete()
             messages.success(request, 'Campeonato Excluído')
     return redirect('index')

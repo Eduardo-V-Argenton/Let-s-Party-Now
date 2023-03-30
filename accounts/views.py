@@ -125,7 +125,7 @@ def send_friend_request(request, username):
     friend_request, created =  FriendRequest.objects.get_or_create(from_user=request.user, to_user=to_user)
     if created:
         frn = FriendRequestNotification.objects.create(sender=request.user, 
-                            recipient=to_user, object_linked=friend_request)
+                            recipient=to_user)
         frn.save()
         messages.info(request,'Solicitação de amizade enviada')
     else:

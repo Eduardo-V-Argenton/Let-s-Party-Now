@@ -62,7 +62,7 @@
                                 <div style="max-height: 250px; overflow-y: scroll;">
                                     <ul class="list-group">
                                     {% for player in championship.players.all %}
-                                        <li class="list-group-item">{{ player.username }} <a href="{% url 'remove_player' championship.id player.id %}" class="btn btn-danger btn-sm float-right">Remove</a></li>
+                                        <li class="list-group-item">{{ player.username }} <a href="{% url 'remove_player' championship.id player.id %}" class="btn btn-danger btn-sm float-right">Remover</a></li>
                                     {% empty %}
                                         <li class="list-group-item">No players in this championship</li>
                                     {% endfor %}
