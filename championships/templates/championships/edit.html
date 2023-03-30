@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{championship.championship_name}}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="start_date">Data:</label>
+            <input type="datetime-local" class="form-control" id="start_date" name="start_date" value={{championship.start_date|date:'Y-m-d\TH:i:s'}} required>
+        </div>
+        {% if not championship.is_public %}
+            <div class="form-group">
+                <label for="password" id="password_label">Senha:</label>
+                <input type="password" class="form-control" id="password" name="password">
+            </div>
+        {% endif %}
+        <div class="form-group">
+            <label for="info">Info:</label>
+            <textarea class="form-control" id="info" name="info" rows="3" >{{championship.info}}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="vacancies">Vagas:</label>
+            <input type="number" class="form-control" id="vacancies" name="vacancies" value={{championship.vacancies}}>
+        </div>
+        {% if not championship.use_default_entrance %}
+            <div class="form-group">
+                <label for="players_num">Vagas Preenchidas:</label>
+                <input type="number" class="form-control" id="players_num" name="players_num">
+            </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+        <a href="{% url 'delete_championship' championship.id %}" class="btn btn-danger">Excluir</a>
+{% endblock content %}
+

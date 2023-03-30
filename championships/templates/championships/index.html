@@ -1,45 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 class="mb-4">Campeonatos</h1>
-  <div class="table-responsive">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Game</th>
-          <th>Organizador</th>
-          <th>Data</th>
-          <th>Vagas</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for championship in championships %}
-          <tr>
-            <td>{{ championship.championship_name }}</td>
-            <td>
-              <a href="{% url 'game_page' championship.game.id %}">
-                {{ championship.game.name }}
-              </a>
-            </td>
-            <td>
-              <a href="{% url 'profile' championship.organizer.username %}">
-                {{ championship.organizer }}
-              </a>
-            </td>
-            <td>{{ championship.start_date }}</td>
-            <td>{{ championship.vacancies }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="d-flex">
+    <a href="{% url 'public_championships' %}" class='link-dark'><h1>Campeonatos Públicos</h1></a>
+    <h1>  |  </h1>
+    <a href="{% url 'my_championships_list' %}" class='link-dark'><h1>Campeonatos Organizados por mim</h1></a>
+    <h1>  |  </h1>
+    <a href="{% url 'championships_list_participating' %}" class='link-dark'><h1>Campeonatos que estou participando</h1></a>
+  </div>  
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
+      {% for championship in championships %}
+        <div class="col">
+            <div class="card h-100">
+              <tr>
+                  <a href="{% url 'game_page' championship.game.id %}"><img src="{{ championship.game.cover.url }}" class="card-img-top" alt="{{ championship.game.name }} cover"></a>
+                  <div class="card-body">
+                      <h5 class="card-title">{{ championship.championship_name }}</h5>
+                      <a href="{% url 'profile' championship.organizer.username %}" class="link-dark"><p class="card-text">Organizador: {{ championship.organizer.username}}</p></a>
+                      <p class="card-text">Data: {{ championship.start_date }}</p>
+                      <p class="card-text">Vagas preenchidas: {{championship.players.count}}/{{ championship.vacancies }} </h6>
+                      <br><a href="{% url 'championship_page' championship.id %}" class="btn btn-primary">Acessar</a>
+                  </div>
+              </tr>  
+            </div>
+        </div>
+        {% empty %}
+        <p>Nenhum Campeonato encontrado</p>
+      {% endfor %}
   </div>
-  <div class="pagination">
-    {% if page_number > 1 %}
-          <a href="?page={{ page_number|add:"-1" }}" class="btn btn-primary">Anterior</a>
-    {% endif %}
-    {% if has_next%}
-          <a href="?page={{ page_number|add:"1" }}" class="btn btn-primary">Próximo</a>
-    {% endif %}
-  </div>
-{% endblock %}
+{% endblock content %}

@@ -14,5 +14,6 @@ class Championship(models.Model):
     info = models.TextField(blank=True)
     vacancies = models.IntegerField(default=0)
     use_default_entrance = models.BooleanField(default=True)
+    players_num = models.IntegerField(default=0)
     is_finished = models.BooleanField(default=False)
     champion_name = models.CharField(max_length=255, blank=True)

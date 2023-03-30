@@ -1,8 +1,9 @@
-from django.shortcuts import render
-from . models import Championship
+from django.shortcuts import render, redirect
+from . models import Championship,User
 from django.contrib import messages
 from games.utils.igdb import get_igdb_data
 from django.contrib.auth.decorators import login_required
+
 
 @login_required(redirect_field_name='login')
 def create(request, game_id):
@@ -21,7 +22,7 @@ def create(request, game_id):
                                     use_default_entrance=use_default_entrance)
         championship.save()
         messages.success(request, 'Campeonato Criado')
-        # redirect
+        return redirect('championship_page', championship.id)
     
     return render(request, 'championships/create.html')
 
@@ -41,7 +42,7 @@ def list_public(request):
     championships = championships[offset:offset+championships_per_page]
 
     for championship in championships:
-        data=f'fields name; where id = {championship.game};'
+        data=f'fields name,cover.url; where id = {championship.game};'
         game = get_igdb_data(request, data)
         championship.game = game[0]
 
@@ -76,3 +77,158 @@ def list_public_by_game(request, game_id):
         'has_next': has_next,
         'page_number': int(page_number),
         })
+
+
+@login_required(redirect_field_name='login')
+def championship_page(request, championship_id):
+    championship = Championship.objects.get(id=championship_id)
+    data=f'fields name,cover.url; where id = {championship.game};'
+    game = get_igdb_data(request, data)
+    championship.game = game[0]
+    return render(request, 'championships/championship_page.html', {
+        'championship':championship
+    })
+    
+
+@login_required(redirect_field_name='login')
+def edit(request, championship_id):
+    championship = Championship.objects.get(id=championship_id)
+    if championship.organizer == request.user:
+        if request.method == 'POST':
+            start_date = request.POST['start_date']
+            password = request.POST.get('password', '')
+            info = request.POST.get('info', '')
+            vacancies = int(request.POST.get('vacancies', ''))
+            players_num = request.POST.get('players_num', '')
+            if start_date and start_date != championship.start_date:
+                championship.start_date = start_date
+            if password and not championship.is_public and password != championship.password:
+                championship.password = password
+            if info and info != championship.info:
+                championship.info = info
+            if vacancies and vacancies != championship.vacancies:
+                if championship.use_default_entrance and championship.players.count() < vacancies:
+                    championship.vacancies = vacancies
+                elif not championship.use_default_entrance and championship.players_num < vacancies:
+                    championship.vacancies = vacancies
+                else:
+                    messages.error(request, 'O número de vagas não pode ser maior que o número participantes')
+            if players_num and int(players_num) <= championship.vacancies and \
+                    not championship.use_default_entrance and int(players_num) != championship.players_num:
+                championship.players_num = int(players_num)
+                messages.error(request, 'O número de jogadores não pode ser maior do que o de vagas')
+            championship.save()
+            messages.success(request, 'Campeonato Editado')
+            return redirect('championship_page',championship_id)
+        else:
+            return render(request, 'championships/edit.html',{
+                'championship':championship
+        })
+    redirect('index')
+
+
+@login_required(redirect_field_name='enter_championship')
+def enter_championship(request, championship_id):
+    championship = Championship.objects.get(id=championship_id)
+    if championship.is_public and championship.players.count() < championship.vacancies \
+            and championship.use_default_entrance and request.user not in championship.players.all():
+        championship.players.add(request.user)
+        championship.save()
+        return redirect('championship_page',championship_id)
+    else:
+        return redirect('public_championships')
+
+@login_required(redirect_field_name='enter_championship')
+def exit_championship(request, championship_id):
+    championship = Championship.objects.get(id=championship_id)
+    if championship.use_default_entrance and request.user in championship.players.all():
+        championship.players.remove(request.user)
+        championship.save()
+        return redirect('championship_page',championship_id)
+    else:
+        return redirect('public_championships')
+
+
+@login_required(redirect_field_name='enter_championship')
+def remove_player(request, championship_id, player_id):
+    championship = Championship.objects.get(id=championship_id)
+    player = User.objects.get(id=player_id)
+    if championship.use_default_entrance and player in championship.players.all()\
+            and championship.organizer == request.user:
+        championship.players.remove(player)
+        championship.save()
+        return redirect('championship_page',championship_id)
+    else:
+        return redirect('public_championships')
+
+
+@login_required(redirect_field_name='login')
+def my_championships_list(request):
+    page_number = request.GET.get('page', 1)
+    championships = Championship.objects.filter(organizer=request.user)
+    total_championships = championships.count()
+    championships_per_page = 20
+    offset = (int(page_number) - 1) * championships_per_page
+
+    if offset + championships_per_page < total_championships:
+        has_next = True
+    else:
+        has_next = False
+    championships = championships[offset:offset+championships_per_page]
+
+    for championship in championships:
+        data=f'fields name,cover.url; where id = {championship.game};'
+        game = get_igdb_data(request, data)
+        championship.game = game[0]
+
+    return render(request, 'championships/index.html', {
+        'championships':championships,
+        'has_next': has_next,
+        'page_number': int(page_number),
+        })
+
+
+@login_required(redirect_field_name='login')
+def championships_list_participating(request):
+    page_number = request.GET.get('page', 1)
+    championships = Championship.objects.filter(players=request.user)
+    total_championships = championships.count()
+    championships_per_page = 20
+    offset = (int(page_number) - 1) * championships_per_page
+
+    if offset + championships_per_page < total_championships:
+        has_next = True
+    else:
+        has_next = False
+    championships = championships[offset:offset+championships_per_page]
+
+    for championship in championships:
+        data=f'fields name,cover.url; where id = {championship.game};'
+        game = get_igdb_data(request, data)
+        championship.game = game[0]
+
+    return render(request, 'championships/index.html', {
+        'championships':championships,
+        'has_next': has_next,
+        'page_number': int(page_number),
+        })
+
+
+@login_required(redirect_field_name='login')
+def delete(request, championship_id):
+    championship = Championship.objects.get(id=championship_id)
+    if championship.organizer == request.user:
+        if championship.players.count() > 25:
+            if not championship.use_default_entrance and championship.players_num \
+                    >= 0.75 * championship.vacancies:
+                messages.error(request, 'O campeonato não pode ser excluído, entre em contato com o suporte')
+            elif championship.use_default_entrance and championship.players.count() \
+                    >= 0.75 * championship.vacancies:
+                messages.error(request, 'O campeonato não pode ser excluído, entre em contato com o suporte')
+            else:
+                championship.delete()
+                messages.success(request, 'Campeonato Excluído')
+        else:
+            championship.delete()
+            messages.success(request, 'Campeonato Excluído')
+    return redirect('index')

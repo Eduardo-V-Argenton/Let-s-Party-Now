@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if not championship.is_public %} 
+        <script>
+            function promptPassword() {
+                var password = prompt("Esse é um campeonato privado, insira a senha:");
+                if(password != '{{ championship.password }}'){
+                    window.location.reload(true)
+                }
+            }
+            promptPassword()    
+        </script> 
+    {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{% url 'game_page' championship.game.id %}"><img src="{{ championship.game.cover.url }}" class="img-fluid" alt="{{ championship.game.name }} cover"></a>
+            </div>
+            <div class="col-md-6">
+            <h1>{{ championship.championship_name }}</h1>
+            {% if championship.organizer == user %}
+                <a href="{% url 'edit_championship' championship.id %}" class="btn btn-primary">Editar</a><br>
+            {% endif %}
+            {% if championship.is_finished %}
+                <h3>Campeonato Finalizado</h3>
+            {% endif %}
+            <a href="{% url 'profile' championship.organizer.username %}" class="link-dark">Organizador: {{ championship.organizer.username}}</a>
+            <p>Data: {{ championship.start_date }}</p>
+            <p>Info: {{ championship.info }}</p>
+                {% if championship.use_default_entrance %}
+                    <p>Vagas preenchidas: {{ championship.players.count}}/{{ championship.vacancies }}</p>
+                    {% if  championship.vacancies > championship.players.count %}
+                        {% if user not in championship.players.all %}
+                            <a href="{% url 'enter_championship' championship.id %}" class="btn btn-primary">Entrar</a><br>
+                        {% endif %}
+                        {% else %}
+                            <p>Não há mais vagas</p><br>
+                    {% endif %}
+                    {% else %}
+                        <p>Vagas preenchidas: {{ championship.players_num}}/{{ championship.vacancies }}</p>
+                        {% if  championship.vacancies == championship.players_num %}
+                            <p>Não há mais vagas</p><br>
+                        {% endif %}
+                        <p>Esse campeonato não usa a forma padrão de entrada</p><br>
+                {% endif %}
+            {% if championship.use_default_entrance %}
+                {% if user != championship.organizer %}
+                    <div style="max-height: 250px; overflow-y: scroll;">
+                        <ul class="list-group">
+                        {% for player in championship.players.all %}
+                            <li class="list-group-item"><a href="{% url 'profile' player.username %}" class="link-dark">{{ player.username }}</a></li>
+                        {% empty %}
+                            <li class="list-group-item">No players in this championship</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h2>Players</h2>
+                                <div style="max-height: 250px; overflow-y: scroll;">
+                                    <ul class="list-group">
+                                    {% for player in championship.players.all %}
+                                        <li class="list-group-item">{{ player.username }} <a href="{% url 'remove_player' championship.id player.id %}" class="btn btn-danger btn-sm float-right">Remove</a></li>
+                                    {% empty %}
+                                        <li class="list-group-item">No players in this championship</li>
+                                    {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                {% endif %}
+            {% endif %}
+            {% if not championship.is_finished and user in championship.players.all %}
+                <div>
+                    <p>Você esta participando do campeonato</p>
+                    <a href="{% url 'exit_championship' championship.id%}" class="btn btn-primary">Sair</a>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
