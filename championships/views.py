@@ -135,14 +135,21 @@ def edit(request, championship_id):
 @login_required(redirect_field_name='enter_championship')
 def enter_championship(request, championship_id):
     championship = Championship.objects.get(id=championship_id)
-    if championship.is_public and championship.players.count() < championship.vacancies \
-            and championship.use_default_entrance and request.user not in championship.players.all():
-        championship.players.add(request.user)
-        championship.save()
-        chn = ChampionshipNotification(sender=request.user, recipient=championship.organizer,
-                                message=f"{request.user.username} entrou em {championship.championship_name}")
-        chn.save()
-        return redirect('championship_page',championship_id)
+    if championship.use_default_entrance and request.user not in championship.players.all():
+        if championship.is_public and championship.players.count() < championship.vacancies: 
+            championship.players.add(request.user)
+            championship.save()
+            chn = ChampionshipNotification(sender=request.user, recipient=championship.organizer,
+                                    message=f"{request.user.username} entrou em {championship.championship_name}")
+            chn.save()
+            return redirect('championship_page',championship_id)
+        elif not championship.is_public and championship.players_num < championship.vacancies:   
+            championship.players.add(request.user)
+            championship.save()
+            chn = ChampionshipNotification(sender=request.user, recipient=championship.organizer,
+                                    message=f"{request.user.username} entrou em {championship.championship_name}")
+            chn.save()
+            return redirect('championship_page',championship_id)
     else:
         return redirect('public_championships')
 
