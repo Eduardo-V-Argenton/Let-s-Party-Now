@@ -17,5 +17,4 @@ class CustomUserAdmin(UserAdmin):
     # Define the fields to filter by in the list view
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'date_joined')
 
-admin.site.register(FriendRequest)
 admin.site.register(User, CustomUserAdmin)

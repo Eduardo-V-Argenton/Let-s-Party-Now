@@ -16,4 +16,6 @@ class Championship(models.Model):
     use_default_entrance = models.BooleanField(default=True)
     players_num = models.IntegerField(default=0)
     is_finished = models.BooleanField(default=False)
-    champion_name = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.championship_name

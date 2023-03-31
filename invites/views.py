@@ -4,17 +4,14 @@ from django.utils import timezone
 from django.contrib import messages
 from games.utils.igdb import get_igdb_data
 from .models import Invite
-from lpn_notifications.models import InviteNotification
 from accounts.models import User
+from .functions.functions import notify_friend, notify_sender, get_games, get_game_name
 
 
 @login_required(redirect_field_name='login')
 def index(request):
     invites = Invite.objects.order_by('-id').filter(to_user=request.user)
-    for invite in invites:
-        data=f'fields id,name,cover.url; where id = {invite.game};'
-        game = get_igdb_data(request, data)
-        invite.game = game[0]
+    invites = get_games(request, invites)
     return render(request, 'invites/index.html', {'invites':invites})
 
 
@@ -25,18 +22,14 @@ def create_invite(request, game_id):
         date = request.POST.get('datetime')
         message = request.POST.get('message')
         
-        data=f'fields name; where id = {game_id};'
-        game_name = get_igdb_data(request, data)[0]['name']
+        game_name = get_game_name(request, game_id)
         
         friends = User.objects.filter(id__in=friends_ids)
         for friend in friends:
             invite, created = Invite.objects.get_or_create(from_user=request.user, to_user=friend, \
                                            date=date, message=message, game=game_id)
             if created:
-                ivn = InviteNotification.objects.create(sender=request.user, \
-                        recipient=friend, message=f'Você recebeu um convite de'  
-                            f'{request.user} para jogar {game_name}')
-                ivn.save()
+                notify_friend(friend, f'Você recebeu um convite de {request.user} para jogar {game_name}')
             else:
                 messages.error(request, 'Erro ao enviar os convites')
                 return redirect('create_invite', game_id)
@@ -59,13 +52,9 @@ def accept_invite(request, invite_id):
         invite.was_accepted = True
         invite.save()
 
-        data=f'fields name; where id = {invite.game};'
-        game_name = get_igdb_data(request, data)[0]['name']
+        game_name = get_game_name(request, invite.game)
         
-        ivn = InviteNotification.objects.create(sender=request.user, \
-                recipient=invite.from_user, \
-                    message=f'{request.user.username} aceitou seu pedido para jogar {game_name}')
-        ivn.save()
+        notify_sender(invite.from_user, f'{request.user.username} aceitou seu pedido para jogar {game_name}')
         messages.success(request, 'Convite aceito')
     else:
         messages.error(request, 'Ocorreu um erro na aceitação do convite')
@@ -82,13 +71,9 @@ def reject_invite(request, invite_id):
         invite.was_accepted = False
         invite.save()
 
-        data=f'fields name; where id = {invite.game};'
-        game_name = get_igdb_data(request, data)[0]['name']
+        game_name = get_game_name(request, invite.game)
         
-        ivn = InviteNotification.objects.create(sender=request.user, \
-                recipient=invite.from_user, \
-                    message=f'{request.user.username} recusou seu pedido para jogar {game_name}')
-        ivn.save()
+        notify_sender(invite.from_user, f'{request.user.username} recusou seu pedido para jogar {game_name}')
         messages.success(request, 'Convite Recusado')
     else:
         messages.error(request, 'Ocorreu um erro na recusa do convite')

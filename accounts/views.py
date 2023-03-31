@@ -2,10 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import RequestDataTooBig
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
-from django.core.validators import validate_email
 from django.db.models import Q
 from .models import User, FriendRequest
-from lpn_notifications.models import FriendRequestNotification
+from .functions.functions import friend_request_notification, validate_user, edit_values_modified, raise_image_too_large
 
 
 def login(request):
@@ -38,40 +37,15 @@ def register(request):
     email = request.POST.get('email')
     password = request.POST.get('password')
     password2 = request.POST.get('password2')
-
-    if not name or not username or not email or not password or not password2:
-        messages.error(request, 'Nenhum campo pode ficar vazio')
+    validated = validate_user(request, name=name, username=username, email=email, \
+                              password=password, password2=password2) 
+    if validated:
+        user = User.objects.create_user(username=username, email=email, password=password, name=name)
+        user.save()
+        messages.success(request, 'Usuário Cadastrado')
+        return redirect('login')
+    else:
         return render(request, 'accounts/register.html')
-
-    try:
-        validate_email(email)
-    except:
-        messages.error(request, 'Email Inválido')
-        return render(request, 'accounts/register.html')
-    if len(password) < 6:
-        messages.error(request, 'Senha muito curta')
-        return render(request, 'accounts/register.html')
-
-    if len(username) < 6:
-        messages.error(request, 'Usuário muito curto')
-        return render(request, 'accounts/register.html')
-    
-    if password != password2:
-        messages.error(request, 'Senhas Diferentes')
-        return render(request, 'accounts/register.html')
-
-    if User.objects.filter(username=username).exists():
-        messages.error(request, 'Usuário já existe')
-        return render(request, 'accounts/register.html')
-
-    if User.objects.filter(email=email).exists():
-        messages.error(request, 'Email já existe')
-        return render(request, 'accounts/register.html')
-    
-    user = User.objects.create_user(username=username, email=email, password=password, name=name)
-    user.save()
-    messages.success(request, 'Usuário Cadastrado')
-    return redirect('login')
 
 
 @login_required(redirect_field_name='login')
@@ -124,9 +98,7 @@ def send_friend_request(request, username):
     to_user = get_object_or_404(User, username=username)
     friend_request, created =  FriendRequest.objects.get_or_create(from_user=request.user, to_user=to_user)
     if created:
-        frn = FriendRequestNotification.objects.create(sender=request.user, 
-                            recipient=to_user)
-        frn.save()
+        friend_request_notification(to_user)
         messages.info(request,'Solicitação de amizade enviada')
     else:
         messages.error(request, 'Solicitação já enviada')
@@ -172,13 +144,9 @@ def remove_friend(request, username):
 @login_required(redirect_field_name='login')
 def edit_profile(request):
     try:
-
         if request.method != 'POST':
-            image_too_large = request.GET.get('image_too_large')
-            if(image_too_large == 'true'):
-                raise RequestDataTooBig
+            raise_image_too_large(request)
             return render(request, 'accounts/edit_profile.html')
-
         name = request.POST.get('name')
         profile_picture = request.FILES.get('profile_picture')
         email = request.POST.get('email')
@@ -186,56 +154,20 @@ def edit_profile(request):
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
 
+        edit_values_modified(request, user=request.user, name=name, profile_picture=profile_picture, email=email, \
+                             about=about, password=password, password2=password2) 
         
-        user = get_object_or_404(User, username=request.user.username)
-        
-        if len(name) == 0:
-            messages.error(request, 'Nome não pode ser vazio')
-            return render(request, 'accounts/edit_profile.html')
-        elif user.name != name:
-            user.name = name
-        
-        if profile_picture is not None:
-            user.profile_picture = profile_picture
-            
-        if email != user.email:
-            try:
-                if len(email) == 0:
-                    messages.error(request, 'Email não pode ser vazio')
-                    return render(request, 'accounts/edit_profile.html')
-                validate_email(email)
-                if User.objects.filter(email=email).exists():
-                    messages.error(request, 'Email já existe')
-                    return render(request, 'accounts/edit_profile.html')
-                user.email = email
-            except:
-                messages.error(request, 'Email Inválido')
-                return render(request, 'accounts/edit_profile.html')
-        
-        user.about = about
-
-        if len(password) > 0:
-            if len(password) < 6:
-                messages.error(request, 'Senha muito curta')
-                return render(request, 'accounts/edit_profile.html')
-            elif password != password2:
-                messages.error(request, 'Senhas Diferentes')
-                return render(request, 'accounts/edit_profile.html')
-            else:
-                user.set_password(password)
-
-        user.save()
-
-        messages.success(request, 'Alterações Salvas')
     except RequestDataTooBig:
         messages.error(request, 'Imagem muito grande, o tamanho máximo permitido é de 1.5MB')
         return redirect('edit_profile')
     
     return redirect('profile', request.user.username)
 
+
 @login_required(redirect_field_name='login')
 def delete_account(request):
     return render(request, 'accounts/delete_account.html')
+
 
 @login_required(redirect_field_name='login')
 def confirm_delete(request):
