@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -8,7 +9,7 @@
 
 </head>
 
-<body style="background-image: url('/media/default/lpn.jpg'); color:white";>
+<body style="background-image: url({%static 'media/default/lpn.png'%}); color:white";>
 {% include 'partial/_nav.html' %}
 {% include 'partial/_messages.html' %}
 <!-- Page Content -->

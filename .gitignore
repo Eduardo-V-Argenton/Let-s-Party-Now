@@ -130,3 +130,4 @@ dmypy.json
 media/users
 migrations
 staticfiles
+templates/static/media/news
