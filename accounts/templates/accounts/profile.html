@@ -2,29 +2,31 @@
 
 {% block content %}
 
-  <h1 class="mt-5">{{user_profile.username}}</h1>
+<div style="border-radius: 10px; background-color: rgb(0, 61, 104); padding-bottom: 5px; margin-top:40px; text-align: center;">
+  <h2 class="mt-5" style="padding-top:10px">{{user_profile.username}}</h2>
   {% if user_profile.profile_picture %}
   <p>
-    <img src="{{ user_profile.profile_picture.url }}" style="max_width:250px; height: auto">
+      <img src="{{ user_profile.profile_picture.url }}" style="max-width:250px; height: 250px">
   </p>
   {% endif %}
   <dl>
-    <dt>Name</dt>
-    <dd>{{user_profile.name}}</dd>
+      <dt>Nome</dt>
+      <dd>{{user_profile.name}}</dd>
 
-    <dt>Data criação</dt>
-    <dd>{{user_profile.date_joined|date:'d/m/Y'}}</dd>
+      <dt>Data criação</dt>
+      <dd>{{user_profile.date_joined|date:'d/m/Y'}}</dd>
 
-    <dt>Sobre</dt>
-    <dd>
-      {{user_profile.about}}
-    </dd>
-    {% if is_friend %}
+      <dt>Sobre</dt>
+      <dd>
+          {{user_profile.about}}
+      </dd>
+      {% if is_friend %}
       <a href="{% url 'remove_friend' user_profile.username %}" class="btn btn-primary">Remover amigo</a>
       {% elif user_profile.id != user.id %}
-        <a href="{% url 'send_friend_request' user_profile.username %}" class="btn btn-primary">Enviar pedido de amizade</a>
+      <a href="{% url 'send_friend_request' user_profile.username %}" class="btn btn-primary">Enviar pedido de amizade</a>
       {% elif user_profile.id == user.id %}
-        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Editar Perfil</a>
-    {% endif %}
+      <a href="{% url 'edit_profile' %}" class="btn btn-primary">Editar Perfil</a>
+      {% endif %}
   </dl>
+</div>
 {% endblock content %}

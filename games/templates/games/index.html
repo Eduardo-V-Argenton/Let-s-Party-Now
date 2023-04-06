@@ -2,13 +2,12 @@
 
 {% block content %}
     {% if request.GET.search %}
-      <div class="d-flex">
-        <a href='?search={{ request.GET.search }}&page=1' class='link-dark'><h1>Games</h1></a>
-        <h1>  |  </h1>
-        <a href='{% url "users_list" %}?search={{request.GET.search}}' class='link-secondary'><h1>Usuários</h1></a>
+      <div class="d-flex" style="justify-content: center; align-items: center; display: flex; padding:10px">
+        <a href='?search={{ request.GET.search }}&page=1'class='btn btn-primary' style="margin: 20px"><h3>Jogos</h3></a>
+        <a href='{% url "users_list" %}?search={{request.GET.search}}' class='btn btn-light' style="margin: 10px"><h3>Usuários</h3></a>
       </div>  
       {% else %}
-        <h1>Games</h1>
+        <h1>Jogos</h1>
     {% endif %}
 
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
@@ -16,7 +15,7 @@
             <div class="col">
                 <div class="card h-100">
                     <a href="{% url 'game_page' game.id%}"><img src="{{ game.cover.url }}" class="card-img-top" alt="{{ game.name }} cover"></a>
-                    <div class="card-body">
+                    <div class="card-body" style="background-color: rgb(0, 61, 104);">
                         <h5 class="card-title">{{ game.name }}</h5>
                     </div>
                 </div>
@@ -25,12 +24,13 @@
             <p>Nenhum jogo encontrado</p>
         {% endfor %}
     </div>
+    <br>
     <div class="pagination">
       {% if page_number > 1 %}
         {% if request.GET.search %}
           <a href="?search={{ request.GET.search }}&page={{ page_number|add:"-1" }}" class="btn btn-primary">Anterior</a>
           {% else %}
-            <a href="?page={{ page_number|add:"-1" }}" class="btn btn-primary">Anterior</a>
+            <a href="?page={{ page_number|add:"-1" }}" class="btn btn-primary" style="margin-right: 10px">Anterior</a>
         {% endif %}
       {% endif %}
       {% if games|length >= games_per_page %}

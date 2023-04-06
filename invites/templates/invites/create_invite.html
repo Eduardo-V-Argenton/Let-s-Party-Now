@@ -4,10 +4,10 @@
   <div class="row">
     <div class="col-md-6 mx-auto">
       <div class="card mt-5">
-        <div class="card-header">
+        <div class="card-header" style="background-color: rgb(0, 35, 59);">
           <h4>Criar Convite</h4>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="background-color: rgb(0, 61, 104);">
           <form method="post">
             {% csrf_token %}
             <div class="mb-3">
@@ -23,7 +23,7 @@
               <input type="datetime-local" name="datetime" id="datetime" class="form-control" value="{{ default_datetime }}" required>
             </div>
             <div class="mb-3">
-              <label for="message" class="form-label">mensagem:</label>
+              <label for="message" class="form-label">Mensagem:</label>
               <textarea name="message" id="message" class="form-control" rows="4">{{ message }}</textarea>
             </div>
             <div class="text-center">

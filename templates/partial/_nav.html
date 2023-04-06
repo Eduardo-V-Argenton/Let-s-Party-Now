@@ -1,7 +1,12 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
+<!--<nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">-->
+<nav class="navbar navbar-expand-lg navbar-dark static-top" style="background-color: rgb(0, 61, 104);">
+
     <div class="container">
-        <a class="navbar-brand" href=" {% url 'index' %}">Let's Party Now</a>
+        <a class="navbar-brand" href=" {% url 'index' %}"style="margin-right:50px;">
+            <img src="/media/default/logo.png" alt="Let's Party Now Logo" style="margin-left:20px">
+            Let's Party Now
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -10,15 +15,15 @@
         {% if user.is_authenticated %}
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'games_list'%}">Games</a>
+                    <a class="nav-link" href="{% url 'games_list'%}"style="margin-right:50px;">Games</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'public_championships' %}">Campeonatos</a>
+                    <a class="nav-link" href="{% url 'public_championships' %}"style="margin-right:50px;">Campeonatos</a>
                 </li>
             </ul>
-            <form method="get" action="{% url 'games_list' %}">
+            <form method="get" action="{% url 'games_list' %}"style="margin-right:50px;">
                 <div class="form-group row">
                   <div class="col-13">
                     <input class="form-control"
@@ -31,22 +36,22 @@
               </form>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'friends'%}">Amigos</a>
+                    <a class="nav-link" href="{% url 'friends'%}"style="margin-right:50px;">Amigos</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'invites_list'%}">Convites</a>
+                    <a class="nav-link" href="{% url 'invites_list'%}"style="margin-right:50px;">Convites</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'profile' user.username%}">Perfil</a>
+                    <a class="nav-link" href="{% url 'profile' user.username%}"style="margin-right:50px;">Perfil</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'notifications' %}">&#x1f514;</a>
+                    <a class="nav-link" href="{% url 'notifications' %}" style="color:white; margin-right:50px">&#x1f514;</a>
                 </li>
             </ul>
             {% if user.is_staff %}

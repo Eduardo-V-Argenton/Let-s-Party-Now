@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="d-flex">
-    <a href="{% url 'public_championships' %}" class='link-dark'><h1>Campeonatos Públicos</h1></a>
-    <h1>  |  </h1>
-    <a href="{% url 'my_championships_list' %}" class='link-dark'><h1>Campeonatos Organizados por mim</h1></a>
-    <h1>  |  </h1>
-    <a href="{% url 'championships_list_participating' %}" class='link-dark'><h1>Campeonatos que estou participando</h1></a>
-  </div>  
+  <div class="d-flex" style="justify-content: center; align-items: center; display: flex;">
+    <a href="{% url 'public_championships' %}" class='btn btn-primary'style="margin: 20px"><h3>Campeonatos públicos</h3></a>
+    <a href="{% url 'my_championships_list' %}" class='btn btn-primary'style="margin: 20px"><h3>Campeonatos organizados por mim</h3></a>
+    <a href="{% url 'championships_list_participating' %}" class='btn btn-primary'style="margin: 20px"><h3>Campeonatos que estou participando</h3></a>
+  </div> 
+  
+
+
+  
   <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
       {% for championship in championships %}
         <div class="col">
@@ -16,7 +18,7 @@
                   <a href="{% url 'game_page' championship.game.id %}"><img src="{{ championship.game.cover.url }}" class="card-img-top" alt="{{ championship.game.name }} cover"></a>
                   <div class="card-body">
                       <h5 class="card-title">{{ championship.championship_name }}</h5>
-                      <a href="{% url 'profile' championship.organizer.username %}" class="link-dark"><p class="card-text">Organizador: {{ championship.organizer.username}}</p></a>
+                      <a href="{% url 'profile' championship.organizer.username %}" class="nav-link"><p class="card-text">Organizador: {{ championship.organizer.username}}</p></a>
                       <p class="card-text">Data: {{ championship.start_date }}</p>
                       <p class="card-text">Vagas preenchidas: {{championship.players.count}}/{{ championship.vacancies }} </h6>
                       <br><a href="{% url 'championship_page' championship.id %}" class="btn btn-primary">Acessar</a>

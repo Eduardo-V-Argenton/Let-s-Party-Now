@@ -1,25 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="mt-3 mb-3">Login</h1>
-{% if not user.is_authenticated %}
-    <form method="POST" action= {% url 'login' %}>
-        {% csrf_token %}
-        <div class="form-group">
-            <label>Usuario</label>
-            <input type="text" name="username" value="{{request.POST.usuario}}" class="form-control"> 
-        </div>
-        <div class="form-group">
-            <label>Senha</label>
-            <input type="password" name="password" class="form-control"> 
-        </div>
-            <button type="submit" class="btn btn-primary">Logar</button>
-    </form>
-    <a href="{% url 'register' %}" class="btn btn-primary">Registrar-me</a>
-{% else %}
-<p>
-    Já Logado
-    <a href=" {% url 'logout' %}">Clique aqui para sair</a>
-</p>
-{% endif %}
+<div style="border-radius: 10px; background-color: rgb(0, 61, 104); padding: 30px; margin: 40px auto; width: 50%; text-align: center;">
+    <h1 class="mt-3 mb-3">Login</h1>
+    {% if not user.is_authenticated %}
+        <form method="POST" action= {% url 'login' %}>
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Usuário</label>
+                <input type="text" name="username" value="{{request.POST.usuario}}" class="form-control"> 
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" name="password" class="form-control"> 
+            </div>
+            <br/>
+                <button type="submit" class="btn btn-light">Logar</button>
+        </form>
+        <br/>
+        <a href="{% url 'register' %}" class="btn btn-light">Registrar-me</a>
+    {% else %}
+    <p>
+        Já logado. 
+        <a href=" {% url 'logout' %}" class="btn btn-light">Clique aqui para sair</a>
+    </p>
+    {% endif %}
+  </div>
 {% endblock content %}

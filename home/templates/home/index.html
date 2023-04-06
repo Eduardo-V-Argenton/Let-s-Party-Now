@@ -1,11 +1,78 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    Lorem ipsum dolor sit amet consectetur adipiscing elit, 
-    sem justo suscipit euismod iaculis nullam. Ultrices egestas 
-    sociis non porta condimentum ultricies nulla ut eleifend, ad erat nibh curae 
-    felis urna aliquet quisque at tellus, suscipit vel bibendum ligula libero primis 
-    facilisi id. Suscipit libero quam ultrices dictumst varius ante,
-    donec laoreet consequat mattis senectus fames, ut justo morbi augue praesent.
+    <style>
+        @font-face {
+        font-family: 'STRATUM';
+        src: url('media/default/stratum2-medium-webfont.ttf');
+        }
+        main {
+        font-family: 'STRATUM', sans-serif;
+        }
+    </style>
+  <main style="max-width: 1200px; margin: 0 auto; padding: 20px; background-color:rgb(0, 75, 188)">
+    <h2 style="font-size: 1.8rem;">Últimas notícias sobre E-sports</h2>
+    <p style="font-size: 1.2rem;">A PRÓXIMA ERA DO COUNTER-STRIKE COMEÇA NESTE INVERNO</p>
+    <img src="media/default/cs2.png" alt="cs2" style="max-width: 100%; margin-bottom: 20px; width:100%">
+    <!-- <h3 style="font-size: 1.5rem;">Últimas Notícias</h3> -->
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      <li style="margin-bottom: 20px;">
+        <h3 style="margin-bottom: 10px;"><b>COUNTER STRIKE 2!</b></h3>
+        <p style="font-size: 20px;">O Counter-Strike 2 é o maior salto tecnológico na história da série, garantindo novos recursos e atualizações para os próximos anos.
+
+            Todos os novos recursos do jogo serão revelados no lançamento oficial no inverno, mas a jornada para o Counter-Strike 2 começa hoje com o Teste Limitado para jogadores selecionados do CS:GO. Nesse período, avaliaremos um subconjunto dos recursos para resolver problemas graves antes do lançamento mundial.
+            <br><br>
+            O Counter-Strike 2 será lançado neste inverno como uma atualização gratuita do CS:GO. Portanto, monte o seu arsenal, aperfeiçoe as suas habilidades e prepare-se para o que está por vir!
+        </p>
+
+        
+        <div >
+            <div style="display: flex; justify-content: center;">
+                <div style="display: flex; flex-direction: row; align-items: center;">
+                  <img src="media/default/smokes_vid2.gif" alt="cs2" style="max-width: 100%; margin-right: 20px; width:50%">
+                  <p style="font-size: 30px;">
+                    <b>JOGABILIDADE</b><br>Agora, a fumaça pode interagir com outros eventos de jogabilidade, criando novas oportunidades. Balas e granadas explosivas podem "empurrar a fumaça" para abrir linhas de visão ou expandir a oclusão brevemente.
+                  </p>
+                </div>
+              </div>
+        </div>
+        <br><br>
+    
+
+        <div style="display: flex; justify-content: center;">
+            <div style="display: flex; flex-direction: row-reverse; align-items: center;">
+                <img src="media/default/smokes_vid1.gif" alt="cs2" style="max-width: 100%; margin-left: 20px; width:50%">
+                <p style="font-size: 30px;">
+                    <b>EXPANDE NATURALMENTE PARA PREENCHER ESPAÇOS</b><br>Agora, a fumaça escapará por portas abertas e janelas quebradas, subirá e descerá escadas, expandirá em corredores longos e se juntará a outras fumaças.
+                </p>
+            </div>
+        </div>
+        <br><br>
+
+        <div >
+            <div style="display: flex; justify-content: center;">
+                <div style="display: flex; flex-direction: row; align-items: center;">
+                  <img src="media/default/smokes_vid3.gif" alt="cs2" style="max-width: 100%; margin-right: 20px; width:50%">
+                  <p style="font-size: 30px;">
+                    <b>REAGE À ILUMINAÇÃO</b><br>No Counter-Strike 2, as partículas de fumaça funcionam com o sistema unificado de iluminação, permitindo luzes e cores mais realísticas.
+                  </p>
+                </div>
+              </div>
+        </div>
+        <br>
+        <div style="max-width: 1200px; margin: 0 auto;background-color:rgb(255, 255, 255); display: flex; flex-direction: column; justify-content: center; align-items: center;margin-bottom:50px">
+            <p style="font-size: 20px; color:black; text-align: center; margin-left:170px;margin-right:170px;margin-top:40px">
+                <b>Ferramentas da Source 2</b><br>As ferramentas e recursos de renderização da Source 2 estarão disponíveis aos criadores de mapas comunitários para facilitar o desenvolvimento, experimentação e iteração. Além disso, as ferramentas da Oficina de Itens da Source 2 serão lançadas durante o teste limitado.
+            </p>
+            <img src="media/default/map_s2tools.gif" alt="cs2" style="padding:30px; max-width: 100%; margin-right: 20px; width:70%">
+        </div>
+
+
+      </li>
+      
+    </ul>
+  </main>
+
+
 {% endblock content %}
 

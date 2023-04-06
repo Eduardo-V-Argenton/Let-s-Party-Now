@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Você tem certeza que deseja excluir sua conta?</h1>
-<h2>Essa ação é irreversivel</h2>
-<div>
-    <a href="{% url 'confirm_delete' %}" class="btn btn-danger">Sim</a>
-    <a href="{% url 'profile' user.username %}" class="btn btn-primary">Não</a>
+<div style="border-radius: 10px; background-color: rgb(0, 61, 104); padding: 20px; margin-top:40px; text-align: center;">
+    <h1 style="color: white; margin-bottom: 20px;">Você tem certeza que deseja excluir sua conta?</h1>
+    <h2 style="color: white; margin-bottom: 20px;">Essa ação é irreversível</h2>
+    <div>
+        <a href="{% url 'confirm_delete' %}" class="btn btn-danger">Sim</a>
+        <a href="{% url 'profile' user.username %}" class="btn btn-primary">Não</a>
+    </div>
 </div>
 {% endblock content %}

@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="container">
+  <br>
+  <div class="container" style="color: rgb(255, 255, 255)">
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card mb-3">
-          <div class="row g-0">
+          <div class="row g-0" style="background-color: rgb(67, 67, 67)">
             <div class="col-md-4">
               <img class="img-fluid rounded-start" src="{{ game.cover.url }}" alt="{{ game.name }}" heigh='auto' width='auto'>
             </div>
@@ -18,14 +19,17 @@
                   <li><strong>Data de Lançamento:</strong> {{ game.first_release_date}}</li>
                 </ul>
                 <p class="card-text">{{ game.summary }}</p>
-                <a href="{% url 'create_invite' game.id%}" class="btn btn-primary">Convidar amigo para jogar</a>
-                <a href="{% url 'create_championship' game.id%}" class="btn btn-primary">Criar Campeonato</a>
-                <a href="{% url 'public_championships_by_game' game.id%}" class="btn btn-primary">Ver Campeonatos</a>
-              </div>
+                  
+                </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  <div class="arrumar-itens" style="justify-content: center; align-items: center; display: flex;">
+    <a href="{% url 'create_invite' game.id%}" class="btn btn-primary" style="margin: 20px">Convidar amigo para jogar</a>
+    <a href="{% url 'create_championship' game.id%}" class="btn btn-primary" style="margin: 20px">Criar Campeonato</a>
+    <a href="{% url 'public_championships_by_game' game.id%}" class="btn btn-primary" style="margin: 20px">Ver Campeonatos</a>
   </div>
 {% endblock %}

@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <div class="card">
-        <div class="card-body">
-          <form method='post'>
-            {% csrf_token %}
+
+
+<div class="container" style="background-color: rgb(0, 61, 104); margin-top:50px; border-radius: 10px; text-align: center; padding: 20px;">
+  <form method="post">
+    {% csrf_token %}
             <div class="form-group">
               <label for="username">Nome de Usuário</label>
               <input type="text" class="form-control" id="username" name="username">
@@ -20,11 +18,9 @@
               <label for="my-text-field">Descreva seu problema</label>
               <textarea class="form-control" id="problem" name="problem" rows="8"></textarea>
             </div>
+            <br>
             <button type="submit" class="btn btn-primary">Enviar</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+  </form>
 </div>
+
 {% endblock %}
