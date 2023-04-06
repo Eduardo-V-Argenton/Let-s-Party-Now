@@ -12,7 +12,7 @@
             promptPassword()    
         </script> 
     {% endif %}
-    <div class="container">
+    <div class="container" style="max-width: 800px; margin: 50px auto; background-color: rgb(0,64,104); border-radius: 10px; padding: 20px;">
         <div class="row">
             <div class="col-md-6">
                 <a href="{% url 'game_page' championship.game.id %}"><img src="{{ championship.game.cover.url }}" class="img-fluid" alt="{{ championship.game.name }} cover"></a>
@@ -25,9 +25,9 @@
             {% if championship.is_finished %}
                 <h3>Campeonato Finalizado</h3>
             {% endif %}
-            <a href="{% url 'profile' championship.organizer.username %}" class="link-dark">Organizador: {{ championship.organizer.username}}</a>
+            <a href="{% url 'profile' championship.organizer.username %}" class="nav-item" style="text-decoration:none; color:white">Organizador: {{ championship.organizer.username}}</a>
             <p>Data: {{ championship.start_date }}</p>
-            <p>Info: {{ championship.info }}</p>
+            <p>Informações: {{ championship.info }}</p>
                 {% if championship.use_default_entrance %}
                     <p>Vagas preenchidas: {{ championship.players.count}}/{{ championship.vacancies }}</p>
                     {% if  championship.vacancies > championship.players.count %}
@@ -56,20 +56,7 @@
                         </ul>
                     </div>
                     {% else %}
-                        <div class="row">
-                            <div class="col-md-3">
-                                <h2>Players</h2>
-                                <div style="max-height: 250px; overflow-y: scroll;">
-                                    <ul class="list-group">
-                                    {% for player in championship.players.all %}
-                                        <li class="list-group-item">{{ player.username }} <a href="{% url 'remove_player' championship.id player.id %}" class="btn btn-danger btn-sm float-right">Remover</a></li>
-                                    {% empty %}
-                                        <li class="list-group-item">No players in this championship</li>
-                                    {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        
                 {% endif %}
             {% endif %}
             {% if not championship.is_finished and user in championship.players.all %}

@@ -1,35 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{{championship.championship_name}}</h1>
+<div style="max-width: 600px; margin: 50px auto; background-color: rgb(0,64,104); border-radius: 10px; padding: 20px;">
+    <h1 style="color:white;">{{championship.championship_name}}</h1>
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="start_date">Data:</label>
+            <label for="start_date" style="color:white;">Data:</label>
             <input type="datetime-local" class="form-control" id="start_date" name="start_date" value={{championship.start_date|date:'Y-m-d\TH:i:s'}} required>
         </div>
         {% if not championship.is_public %}
             <div class="form-group">
-                <label for="password" id="password_label">Senha:</label>
+                <label for="password" id="password_label" style="color:white;">Senha:</label>
                 <input type="password" class="form-control" id="password" name="password">
             </div>
         {% endif %}
         <div class="form-group">
-            <label for="info">Info:</label>
-            <textarea class="form-control" id="info" name="info" rows="3" >{{championship.info}}</textarea>
+            <label for="info" style="color:white;">Info:</label>
+            <textarea class="form-control" id="info" name="info" rows="3" style="color:black;">{{championship.info}}</textarea>
         </div>
         <div class="form-group">
-            <label for="vacancies">Vagas:</label>
+            <label for="vacancies" style="color:white;">Vagas:</label>
             <input type="number" class="form-control" id="vacancies" name="vacancies" value={{championship.vacancies}}>
         </div>
         {% if not championship.use_default_entrance %}
             <div class="form-group">
-                <label for="players_num">Vagas Preenchidas:</label>
+                <label for="players_num" style="color:white;">Vagas Preenchidas:</label>
                 <input type="number" class="form-control" id="players_num" name="players_num" value={{championship.players_num}}>
             </div>
-        {% endif %}
+        {% endif %}<br>
         <button type="submit" class="btn btn-primary">Enviar</button>
-    </form>
         <a href="{% url 'delete_championship' championship.id %}" class="btn btn-danger">Excluir</a>
+    </form>
+    
+</div>
 {% endblock content %}
 

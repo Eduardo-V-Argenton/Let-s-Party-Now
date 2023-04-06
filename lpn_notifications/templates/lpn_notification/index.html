@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 style="padding-top:30px">Notificações</h1>
-  <table class="table">
+<div style="max-width: 600px; margin: 50px auto; background-color: rgb(0,64,164); border-radius: 10px; padding: 20px;">
+  <h1 style="color: white; text-align: center; padding-top: 30px;">Notificações</h1>
+  <table class="table" style="color: white;">
     <thead>
-      <tr style="color:white">
+      <tr>
         <th>Notificação</th>
         <th>Data</th>
         <th>Excluir</th>
@@ -15,18 +16,19 @@
         {% for notification in notifications%}
             <tr>
                 <td>
-                    <a href="{% url notification.url %}" class="link-dark">{{ notification.message}}</a>  
+                    <a style="text-decoration: none; color:white" href="{% url notification.url %}" >{{ notification.message}}</a>  
                 </td>
                 <td>
                     <p>{{notification.send_date}}</p>  
                 </td>
-                <td>
-                  <a href="{% url 'delete_notification' notification.id%}">&#128465;</a>
+                <td style="text-align: center;">
+                  <a href="{% url 'delete_notification' notification.id%}" class="btn btn-danger">&#128465;</a>
                 </td>
             </tr>
         {% endfor %}
     {% endif %}
     </tbody>
   </table>
+</div>
 {% endblock content %}
 

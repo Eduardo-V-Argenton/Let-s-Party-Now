@@ -16,7 +16,7 @@
             <div class="card h-100">
               <tr>
                   <a href="{% url 'game_page' championship.game.id %}"><img src="{{ championship.game.cover.url }}" class="card-img-top" alt="{{ championship.game.name }} cover"></a>
-                  <div class="card-body">
+                  <div class="card-body" style="background-color: rgb(0,64,164)">
                       <h5 class="card-title">{{ championship.championship_name }}</h5>
                       <a href="{% url 'profile' championship.organizer.username %}" class="nav-link"><p class="card-text">Organizador: {{ championship.organizer.username}}</p></a>
                       <p class="card-text">Data: {{ championship.start_date }}</p>

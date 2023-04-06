@@ -1,33 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Solicitações de amizade recebidas</h1>
+  <h1 style="text-align: center; border-radius: 10px; padding: 20px;">Solicitações de amizade recebidas</h1>
   <table class="table">
-    <thead>
-      <tr style="color:white">
-        <th>Foto</th>
-        <th>Usuário</th>
-      </tr>
-    </thead>
     <tbody>
       {% if friend_requests %}
         {% for friend_request in friend_requests %}
-            <tr>
-                <td>
-                    {% if friend_request.from_user.profile_picture %}
-                        <img src="{{ friend_request.from_user.profile_picture.url }}" style="max_width:100px; height: 100px">
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'profile' friend_request.from_user.id%}"> {{ friend_request.from_user.username }}</a>
-                </td>
-                <td>
-                    <a href="{% url 'accept_friend_request' friend_request.id%}" class="btn btn-primary">Aceitar</a>  
-                </td>
-                <td>
-                    <a href="{% url 'reject_friend_request' friend_request.id%}" class="btn btn-primary">Recusar</a>  
-                </td>
-            </tr>
+        <div style="background-color: rgb(0,64,104); border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            {% if friend_request.from_user.profile_picture %}
+              <img src="{{ friend_request.from_user.profile_picture.url }}" style="max-width:100px; height: 100px">
+            {% endif %}
+            <p style="font-size: 20px; color: #fff; margin-left: 20px;">{{ friend_request.from_user.username }}</p>
+          </div>
+          <div>
+            <a href="{% url 'accept_friend_request' friend_request.id%}" class="btn btn-light" style="margin-right: 10px;">Aceitar</a>
+            <a href="{% url 'reject_friend_request' friend_request.id%}" class="btn btn-light" style="margin-left: 10px;">Recusar</a>
+          </div>
+        </div>
         {% endfor %}
     {% endif %}
     </tbody>

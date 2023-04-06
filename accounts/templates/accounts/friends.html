@@ -1,31 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Lista de amigos</h1>
+  <h1 style="text-align: center; border-radius: 10px; padding: 20px;">Lista de amigos</h1>
   <table class="table">
-    <thead>
-      <tr style="color:white">
-        <th>Foto</th>
-        <th>Usuário</th>
-      </tr>
-    </thead>
+
     <tbody>
       {% if user.friends %}
         {% for friend in user.friends.all %}
-          <tr>
-            <td>
-              {% if friend.profile_picture %}
-                <img src="{{ friend.profile_picture.url }}" style="max_width:100px; height: 100px">
-              {% endif %}
-            </td>
-            <td>
-              <a href="{% url 'profile' friend.username%}"> {{ friend.username }}</a>
-            </td>
-          </tr>
+        <div style="max-width: 400px; margin: 0 auto; background-color: rgb(0,64,104); border-radius: 10px; padding: 20px;">
+          <div style="text-align:center;">
+            {% if friend.profile_picture %}
+              <img src="{{ friend.profile_picture.url }}" style="max_width:100px; height: 100px">
+            {% endif %}
+          </div>
+          <div style="text-align:center; margin-top:10px;">
+            <a class="btn btn-primary" href="{% url 'profile' friend.username%}"> {{ friend.username }}</a>
+          </div>
+        </div>
+        
         {% endfor %}
     {% endif %}
     </tbody>
   </table>
-    <a href="{% url 'friend_requests'%}" class="btn btn-primary">Solicitações de Amizade</a>
+    <a href="{% url 'friend_requests'%}" class="btn btn-primary" style="max-width: 400px; display: block; margin: 0 auto;">Solicitações de Amizade</a>
 {% endblock content %}
 
