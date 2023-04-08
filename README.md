@@ -1,2 +1,2 @@
 # LPN
-Trabalho de Engenharia de Software 2
+Atividade avaliativa de Engenharia de Software 2
