@@ -25,7 +25,7 @@ def validate_user(request, name, email, password, password2, username=None, user
             return False
 
             
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists() and not user:
             messages.error(request, 'Email já cadastrado')
             return False
     
