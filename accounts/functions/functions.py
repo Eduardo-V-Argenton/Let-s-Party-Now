@@ -17,16 +17,17 @@ def validate_user(request, name, email, password, password2, username=None, user
             messages.error(request, 'Nenhum campo pode ficar vazio')
             return False
 
-    try:
-        validate_email(email)
-    except:
-        messages.error(request, 'Email inválido')
-        return False
+    if email:
+        try:
+            validate_email(email)
+        except:
+            messages.error(request, 'Email inválido')
+            return False
 
-         
-    if User.objects.filter(email=email).exists() and user.email != email:
-        messages.error(request, 'Email já cadastrado')
-        return False
+            
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email já cadastrado')
+            return False
     
     if password and len(password) < 6:
         messages.error(request, 'Senha muito curta')
