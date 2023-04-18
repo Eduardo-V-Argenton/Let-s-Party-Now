@@ -57,12 +57,7 @@
             {% if user.is_staff %}
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'support_list'%}">Tickets Suporte</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'review_list'%}">Avaliações</a>
+                        <a class="nav-link" href="/admin/">Administração</a>
                     </li>
                 </ul>
             {% endif %}

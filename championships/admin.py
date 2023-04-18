@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Championship
 
-# Register your models here.
-admin.site.register(Championship)
+class CustomChampionshipAdmin(admin.ModelAdmin):
+    list_display = ('id','championship_name', 'organizer')
+
+admin.site.register(Championship, CustomChampionshipAdmin)
